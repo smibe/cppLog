@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Aplication">
+      <UniqueIdentifier>{f508d936-ac3b-4598-8f3f-273ea50f5e71}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Aplication</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Aplication</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h" />
+    <ClInclude Include="Formatter.h" />
+    <ClInclude Include="LogConfiguration.h" />
+    <ClInclude Include="LogManager.h" />
+    <ClInclude Include="ITarget.h" />
+    <ClInclude Include="FormatString.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Aplication</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="LogConfiguration.cpp" />
+    <ClCompile Include="LogManager.cpp" />
+  </ItemGroup>
+</Project>
