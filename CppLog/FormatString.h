@@ -23,48 +23,35 @@ namespace StringUtils
 
 	const wchar_t* normalizeArg(std::wstring const& arg) { return arg.c_str(); }
 
-	int CheckFormat(wchar_t const *f)
+	void CheckFormat(wchar_t const *f)
 	{
-		int len = 0;
 		for (; *f; ++f)
 		{
-			len++;
 			if (*f != '%' || *++f == '%') continue;
 			throw std::runtime_error("Bad format");
 		}
-		return len;
-	}
-
-	int MaxLen(int value)
-	{
-		return 10;
 	}
 
 	template< class T >
-	struct is_integer : std::integral_constant<
+	struct is_integer : std::integral_constant <
 		bool,
 		std::is_same<int, typename std::remove_cv<T>::type>::value ||
 		std::is_same<long, typename std::remove_cv<T>::type>::value
 	> {};
 
-	int MaxLen(const wchar_t* value)
-	{
-		return wcslen(value);
-	}
-
 	template <typename T, typename... Ts>
-	int CheckFormat(wchar_t const *f, const T& t, const Ts&... ts)
+	void CheckFormat(wchar_t const *f, const T& t, const Ts&... ts)
 	{
-		int len = 0;
+		bool parsingPlaceholder = false;
 		for (; *f; ++f)
 		{
-			if (*f != '%' || *++f == '%')
+
+			if (!parsingPlaceholder && (*f != '%' || *++f == '%'))
 			{
-				len++;
 				continue;
 			}
-
-			len += MaxLen(t);
+			 
+			parsingPlaceholder = false;
 			switch (*f)
 			{
 			case 'f': case 'g':
@@ -73,37 +60,44 @@ namespace StringUtils
 				break;
 			case 'd': case 'x':
 				if (!(is_integer<T>::value))
-					throw std::runtime_error("Expected: floating point argument");
+					throw std::runtime_error("Expected: integer argument");
 				break;
 			case 's':
 				break;
 			default:
-				throw std::runtime_error(std::string("Invalid format char: ") + (char)*f);
+				if (::iswalpha(*f))
+				{
+					throw std::runtime_error(std::string("Invalid format char: ") + (char)*f);
+				}
+				parsingPlaceholder = true;
 			}
-			len += CheckFormat(++f, ts...);
-			return len;
+			if (!parsingPlaceholder)
+			{
+				return CheckFormat(++f, ts...);
+			}
 		}
 		throw std::runtime_error("Too few format specifiers.");
 	}
 
-	template <typename... Ts>
-	int safe_printf(wchar_t const *f, Ts&... ts)
+	size_t GetSize(const wchar_t*f, ...)
 	{
-		check_printf(f, normalizeArg(ts)...);
-		return printf(f, normalizeArg(ts)...);
+		va_list args;
+		va_start(args, f);
+		size_t size = _vscwprintf(f, args) + 1;
+		va_end(args);
+		return size;
 	}
 
 	template <typename... Ts>
 	std::wstring FormatString(const wchar_t * f,
-		const Ts&... ts) 
+		const Ts&... ts)
 	{
-		std::wstring message;
 		CheckFormat(f, normalizeArg(ts)...);
-		va_list args;
-		va_start(args, f);
-		size_t size = _vscwprintf(f, args);
-		va_end(args);
+		size_t size = GetSize(f, normalizeArg(ts)...);
+
+		std::wstring message;
 		message.resize(size);
+
 		swprintf_s(&message[0], size, f, normalizeArg(ts)...);
 		message.resize(wcslen(message.c_str()));
 		return message;

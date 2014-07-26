@@ -23,5 +23,6 @@
     </ClCompile>
     <ClCompile Include="LoggerTest.cpp" />
     <ClCompile Include="FormatStringTest.cpp" />
+    <ClCompile Include="FormatterTest.cpp" />
   </ItemGroup>
 </Project>

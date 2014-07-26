@@ -8,6 +8,6 @@ namespace CppLog
 	public:
 		~LogConfiguration();
 		void EnableLogger(const std::wstring& loggerName, ELoggingType type);
-		void AddOutputter(const std::wstring& loggerName, ITarget outputter);
+		void AddOutputter(const std::wstring& loggerName, ITarget *outputter);
 	};
 }

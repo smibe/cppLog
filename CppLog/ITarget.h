@@ -1,12 +1,14 @@
 #pragma once
-#include "Logger.h"
 
-using namespace CppLog;
-
-class ITarget
+namespace CppLog
 {
-public:
-	virtual ~ITarget() { }
-	virtual void LogMessage(ELoggingType type, const std::wstring& message);
-};
+	enum ELoggingType;
+	class ITarget
+	{
+	public:
+		virtual ~ITarget() { }
+		virtual void LogMessage(CppLog::ELoggingType type, const std::wstring& message) = 0;
+			
+	};
+}
 
