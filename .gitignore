@@ -1,5 +1,6 @@
-// Don’t commit the following files and directories created by pub, Dart Editor, and dart2js
+﻿// Don’t commit the following files and directories created by pub, Dart Editor, and dart2js
 **/Debug
+**/Release
 **/ipch
 *.opensdf
 *.sdf
